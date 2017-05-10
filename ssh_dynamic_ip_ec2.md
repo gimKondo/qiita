@@ -20,6 +20,7 @@ WindowsからAWSのEC2インスタンスにSSH接続するには、TeraTermを�
 ここで `--filters` の中身を調整すれば、Name以外でインスタンスを指定することもできる。
 
 ```bat:get_ec2_ip.bat
+cd /d %~dp0
 aws --profile %1 ec2 describe-instances --filters "Name=tag:Name,Values=%2" --query "Reservations[*].Instances[*].PublicIpAddress" --output text>ip_work.txt
 ```
 
@@ -28,6 +29,7 @@ aws --profile %1 ec2 describe-instances --filters "Name=tag:Name,Values=%2" --qu
 ```:ssh_ec2.ttl
 ; 1. 動的IPアドレスを取得
 ; 1-1. バッチを実行し、テキストファイル(ip_work.txt)にIPを書き込む
+;      ※バッチをパスの通っていない場所に置く場合はフルパスで指定する
 exec 'cmd /c get_ec2_ip.bat プロファイル名 インスタンス名' 'hide' 1
 ; 1-2. ファイルからIPを取り出し変数にセット
 ;      (ファイルを仲介せず、コマンドの出力を直接受け取る方法を思い付かなかったので)
